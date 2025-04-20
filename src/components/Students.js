@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Students.css'
-function Students() {
+import './Students.css';
+
+const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
+const Students=()=> {
   const [students, setStudents] = useState([]);
   const [form, setForm] = useState({
     first_name: '',
@@ -17,8 +20,10 @@ function Students() {
   const [modalMessage, setModalMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+
+
   const fetchStudents = async () => {
-    const res = await axios.get('http://localhost:5000/api/students');
+    const res = await axios.get(`${API_BASE}/api/students`);
     setStudents(res.data);
   };
 
@@ -36,9 +41,9 @@ function Students() {
       return;
     }
     if (editId) {
-      await axios.put(`http://localhost:5000/api/students/${editId}`, form);
+      await axios.put(`${API_BASE}/api/students/${editId}`, form);
     } else {
-      await axios.post('http://localhost:5000/api/students', form);
+      await axios.post(`${API_BASE}/api/students`, form);
     }
     setForm({ first_name: '', last_name: '', dob: '', gender: '', email: '', phone: '', address: '' });
     setEditId(null);
@@ -51,7 +56,7 @@ function Students() {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/students/${id}`);
+    await axios.delete(`${API_BASE}/api/students/${id}`);
     fetchStudents();
   };
 
@@ -61,7 +66,6 @@ function Students() {
 
   const handleCloseModal = () => setShowModal(false);
 
-  // Search functionality
   const filteredStudents = students.filter(stu =>
     `${stu.first_name} ${stu.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
     stu.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -70,80 +74,27 @@ function Students() {
 
   return (
     <div className="app-container">
-
-
       <h2 className="title">Student Management</h2>
 
-      {/* Form */}
       <div className="form-container">
         <div className="form-grid">
-          <input
-            name="first_name"
-            value={form.first_name}
-            onChange={handleChange}
-            placeholder="First Name *"
-            className="form-input"
-          />
-          <input
-            name="last_name"
-            value={form.last_name}
-            onChange={handleChange}
-            placeholder="Last Name *"
-            className="form-input"
-          />
-          <input
-            name="dob"
-            value={form.dob}
-            onChange={handleChange}
-            type="date"
-            className="form-input"
-          />
-          <input
-            name="gender"
-            value={form.gender}
-            onChange={handleChange}
-            placeholder="Gender *"
-            className="form-input"
-          />
-          <input
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Email *"
-            className="form-input"
-          />
-          <input
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            placeholder="Phone"
-            className="form-input"
-          />
-          <textarea
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-            placeholder="Address"
-            className="form-textarea"
-          />
+          <input name="first_name" value={form.first_name} onChange={handleChange} placeholder="First Name *" className="form-input" />
+          <input name="last_name" value={form.last_name} onChange={handleChange} placeholder="Last Name *" className="form-input" />
+          <input name="dob" value={form.dob} onChange={handleChange} type="date" className="form-input" />
+          <input name="gender" value={form.gender} onChange={handleChange} placeholder="Gender *" className="form-input" />
+          <input name="email" value={form.email} onChange={handleChange} placeholder="Email *" className="form-input" />
+          <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" className="form-input" />
+          <textarea name="address" value={form.address} onChange={handleChange} placeholder="Address" className="form-textarea" />
         </div>
         <button onClick={handleSubmit} className="form-button">
           {editId ? 'Update' : 'Add'} Student
         </button>
       </div>
 
-      {/* Search Bar */}
       <div className="search-bar">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name, email, or address..."
-          className="search-input"
-        />
+        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by name, email, or address..." className="search-input" />
       </div>
 
-      {/* Table */}
       <div className="table-container">
         <table className="table">
           <thead>
@@ -159,7 +110,7 @@ function Students() {
             </tr>
           </thead>
           <tbody>
-            {filteredStudents.slice(0, filteredStudents.length > 5 ? 5 : filteredStudents.length).map((stu) => (
+            {filteredStudents.slice(0, 5).map((stu) => (
               <tr key={stu.id}>
                 <td>{stu.first_name}</td>
                 <td>{stu.last_name}</td>
@@ -179,16 +130,13 @@ function Students() {
           </tbody>
         </table>
         {filteredStudents.length > 5 && (
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="scroll-button"
-          >
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="scroll-button">
             Scroll Up to View More
           </button>
         )}
       </div>
 
-      {/* Bootstrap Modal */}
+      {/* Modal */}
       <div className={`modal ${showModal ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">

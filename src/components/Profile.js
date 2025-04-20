@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import './Profile.css'; // Import the new CSS
+import './Profile.css';
 
 const Profile = () => {
   const { logout } = useContext(AuthContext);
@@ -10,13 +10,13 @@ const Profile = () => {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const API_BASE = process.env.REACT_APP_API_BASE_URL;
 
-  // Fetch profile on mount
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/auth/profile', {
+        const res = await fetch(`${API_BASE}/api/auth/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -31,14 +31,12 @@ const Profile = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [API_BASE]);
 
-  // Handle form input changes
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Update profile
   const handleUpdate = async (e) => {
     e.preventDefault();
     setError(null);
@@ -50,7 +48,7 @@ const Profile = () => {
       if (form.email) body.email = form.email;
       if (form.password) body.password = form.password;
 
-      const res = await fetch('http://localhost:5000/api/auth/profile', {
+      const res = await fetch(`${API_BASE}/api/auth/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -67,12 +65,11 @@ const Profile = () => {
     }
   };
 
-  // Delete profile
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete your account?')) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/auth/profile', {
+      const res = await fetch(`${API_BASE}/api/auth/profile`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

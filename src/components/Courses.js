@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Courses.css'
+import './Courses.css';
+
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 function Courses() {
   const [courses, setCourses] = useState([]);
@@ -15,7 +17,7 @@ function Courses() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const fetchCourses = async () => {
-    const res = await axios.get('http://localhost:5000/api/courses');
+    const res = await axios.get(`${baseURL}/api/courses`);
     setCourses(res.data);
   };
 
@@ -33,9 +35,9 @@ function Courses() {
       return;
     }
     if (editId) {
-      await axios.put(`http://localhost:5000/api/courses/${editId}`, form);
+      await axios.put(`${baseURL}/api/courses/${editId}`, form);
     } else {
-      await axios.post('http://localhost:5000/api/courses', form);
+      await axios.post(`${baseURL}/api/courses`, form);
     }
     setForm({ course_name: '', course_code: '', course_description: '' });
     setEditId(null);
@@ -48,7 +50,7 @@ function Courses() {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/courses/${id}`);
+    await axios.delete(`${baseURL}/api/courses/${id}`);
     fetchCourses();
   };
 
@@ -56,7 +58,6 @@ function Courses() {
     fetchCourses();
   }, []);
 
-  // Search functionality
   const filteredCourses = courses.filter(course =>
     course.course_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     course.course_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -70,7 +71,6 @@ function Courses() {
 
       <h2 className="title">Course Management</h2>
 
-      {/* Form */}
       <div className="form-container">
         <div className="form-grid">
           <input
@@ -100,7 +100,6 @@ function Courses() {
         </button>
       </div>
 
-      {/* Search Bar */}
       <div className="search-bar">
         <input
           type="text"
@@ -111,7 +110,6 @@ function Courses() {
         />
       </div>
 
-      {/* Table */}
       <div className="table-container">
         <table className="table">
           <thead>
@@ -148,7 +146,6 @@ function Courses() {
         )}
       </div>
 
-      {/* Bootstrap Modal */}
       <div className={`modal ${showModal ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">

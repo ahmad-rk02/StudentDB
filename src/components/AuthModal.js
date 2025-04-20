@@ -5,8 +5,8 @@ import './AuthModal.css';
 
 const AuthModal = ({ onClose }) => {
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate(); // Initialize useNavigate
-  const [view, setView] = useState('login'); // 'login', 'signup', 'otp', 'forgot', 'reset'
+  const navigate = useNavigate(); 
+  const [view, setView] = useState('login'); 
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -83,7 +83,7 @@ const AuthModal = ({ onClose }) => {
           return;
       }
 
-      const res = await fetch(`http://localhost:5000${url}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}${url}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

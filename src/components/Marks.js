@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Marks.css'
+import './Marks.css';
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function Marks() {
   const [students, setStudents] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -17,12 +20,18 @@ function Marks() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const fetchData = async () => {
-    const s = await axios.get('http://localhost:5000/api/students');
-    const c = await axios.get('http://localhost:5000/api/courses');
-    const m = await axios.get('http://localhost:5000/api/marks');
-    setStudents(s.data);
-    setCourses(c.data);
-    setMarksList(m.data);
+    try {
+      const s = await axios.get(`${BASE_URL}/api/students`);
+      const c = await axios.get(`${BASE_URL}/api/courses`);
+      const m = await axios.get(`${BASE_URL}/api/marks`);
+      setStudents(s.data);
+      setCourses(c.data);
+      setMarksList(m.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setModalMessage('Failed to load data. Please try again later.');
+      setShowModal(true);
+    }
   };
 
   const handleChange = (e) => {
@@ -40,9 +49,9 @@ function Marks() {
     }
     try {
       if (editId) {
-        await axios.put(`http://localhost:5000/api/marks/${editId}`, form);
+        await axios.put(`${BASE_URL}/api/marks/${editId}`, form);
       } else {
-        await axios.post('http://localhost:5000/api/marks', form);
+        await axios.post(`${BASE_URL}/api/marks`, form);
       }
       setForm({ student_id: '', course_id: '', marks: '', semester: '' });
       setEditId(null);
@@ -65,7 +74,7 @@ function Marks() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/marks/${id}`);
+      await axios.delete(`${BASE_URL}/api/marks/${id}`);
       fetchData();
     } catch (error) {
       setModalMessage('Error deleting mark: ' + error.response?.data?.message || error.message);
@@ -87,7 +96,6 @@ function Marks() {
     return course ? course.course_name : '';
   };
 
-  // Search functionality
   const filteredMarks = marksList.filter(m =>
     findName(m.student_id).toLowerCase().includes(searchQuery.toLowerCase()) ||
     findCourse(m.course_id).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -98,7 +106,6 @@ function Marks() {
 
   return (
     <div className="app-container">
-
       <h2 className="title">Enter Marks</h2>
 
       {/* Form */}
@@ -183,18 +190,8 @@ function Marks() {
                 <td>{m.semester}</td>
                 <td>
                   <div className="action-buttons">
-                    <button
-                      className="action-button edit-button"
-                      onClick={() => handleEdit(m)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="action-button delete-button"
-                      onClick={() => handleDelete(m.id)}
-                    >
-                      Delete
-                    </button>
+                    <button className="action-button edit-button" onClick={() => handleEdit(m)}>Edit</button>
+                    <button className="action-button delete-button" onClick={() => handleDelete(m.id)}>Delete</button>
                   </div>
                 </td>
               </tr>
@@ -211,7 +208,7 @@ function Marks() {
         )}
       </div>
 
-      {/* Bootstrap Modal */}
+      {/* Modal */}
       <div className={`modal ${showModal ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">

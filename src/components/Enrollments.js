@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Enrollments.css'
+import './Enrollments.css';
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function Enrollments() {
   const [students, setStudents] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -17,9 +20,9 @@ function Enrollments() {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         const [s, c, e] = await Promise.all([
-          axios.get('http://localhost:5000/api/students'),
-          axios.get('http://localhost:5000/api/courses'),
-          axios.get('http://localhost:5000/api/enrollments')
+          axios.get(`${BASE_URL}/api/students`),
+          axios.get(`${BASE_URL}/api/courses`),
+          axios.get(`${BASE_URL}/api/enrollments`)
         ]);
         setStudents(s.data);
         setCourses(c.data);
@@ -29,14 +32,14 @@ function Enrollments() {
           courses: c.data,
           enrollments: e.data
         });
-        return; // Success, exit retry loop
+        return;
       } catch (error) {
         console.error(`Fetch error (attempt ${attempt}):`, error);
         if (attempt === retries) {
           setModalMessage('Error fetching data after retries: ' + error.message);
           setShowModal(true);
         }
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
   };
@@ -55,11 +58,11 @@ function Enrollments() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/api/enrollments', form);
+      const response = await axios.post(`${BASE_URL}/api/enrollments`, form);
       const newEnrollment = response.data;
-      setEnrollments(prev => [...prev, newEnrollment]); // Append new enrollment
-      setForm({ student_id: '', course_id: '' }); // Reset form
-      await fetchData(); // Refresh data to ensure sync
+      setEnrollments(prev => [...prev, newEnrollment]);
+      setForm({ student_id: '', course_id: '' });
+      await fetchData();
       console.log('Enrolled:', newEnrollment);
     } catch (error) {
       setModalMessage('Error enrolling student: ' + (error.response?.data?.message || error.message));
@@ -70,9 +73,9 @@ function Enrollments() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/enrollments/${id}`);
-      setEnrollments(prev => prev.filter(e => e.id !== id)); // Remove deleted enrollment
-      await fetchData(); // Refresh data
+      await axios.delete(`${BASE_URL}/api/enrollments/${id}`);
+      setEnrollments(prev => prev.filter(e => e.id !== id));
+      await fetchData();
       console.log('Deleted enrollment:', id);
     } catch (error) {
       setModalMessage('Error deleting enrollment: ' + (error.response?.data?.message || error.message));
@@ -86,28 +89,21 @@ function Enrollments() {
   }, []);
 
   const findName = (id, list, enrollment) => {
-    // Use enrollment data if available
     if (enrollment?.first_name && enrollment?.last_name) {
       return `${enrollment.first_name} ${enrollment.last_name}`;
     }
-    // Fallback to students list
     const item = list.find(i => i.id === id);
-    console.log('findName:', { id, found: !!item, enrollment });
     return item ? `${item.first_name} ${item.last_name}` : 'Unknown Student';
   };
 
   const findCourse = (id, enrollment) => {
-    // Use enrollment data if available
     if (enrollment?.course_name) {
       return enrollment.course_name;
     }
-    // Fallback to courses list
     const course = courses.find(c => c.id === id);
-    console.log('findCourse:', { id, found: !!course, enrollment });
     return course ? course.course_name : 'Unknown Course';
   };
 
-  // Search functionality
   const filteredEnrollments = enrollments.filter(e =>
     findName(e.student_id, students, e).toLowerCase().includes(searchQuery.toLowerCase()) ||
     findCourse(e.course_id, e).toLowerCase().includes(searchQuery.toLowerCase())
@@ -117,11 +113,8 @@ function Enrollments() {
 
   return (
     <div className="app-container">
-
-
       <h2 className="title">Enroll Student in Course</h2>
 
-      {/* Form */}
       <div className="form-container">
         <div className="form-grid">
           <select
@@ -152,7 +145,6 @@ function Enrollments() {
         <button onClick={handleEnroll} className="form-button">Enroll</button>
       </div>
 
-      {/* Search Bar */}
       <div className="search-bar">
         <input
           type="text"
@@ -163,7 +155,6 @@ function Enrollments() {
         />
       </div>
 
-      {/* Table */}
       <h4 className="title" style={{ fontSize: '1.5rem' }}>Enrollment List</h4>
       <div className="table-container">
         <table className="table">
@@ -176,7 +167,7 @@ function Enrollments() {
             </tr>
           </thead>
           <tbody>
-            {filteredEnrollments.slice(0, filteredEnrollments.length > 5 ? 5 : filteredEnrollments.length).map(e => (
+            {filteredEnrollments.slice(0, 5).map(e => (
               <tr key={e.id}>
                 <td>{findName(e.student_id, students, e)}</td>
                 <td>{findCourse(e.course_id, e)}</td>
@@ -205,7 +196,6 @@ function Enrollments() {
         )}
       </div>
 
-      {/* Bootstrap Modal */}
       <div className={`modal ${showModal ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
