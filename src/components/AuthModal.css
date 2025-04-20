@@ -1,0 +1,65 @@
+.auth-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .auth-modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .text-danger {
+    color: red;
+  }
+  
+  .text-success {
+    color: green;
+  }
+  
+  .btn-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-eye {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 10px;
+  }
+  
+  .otp-box {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }

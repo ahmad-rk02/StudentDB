@@ -1,0 +1,160 @@
+/* Profile.css */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --background-color: #f8f9fa;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --gradient: linear-gradient(135deg, #007bff, #00d4ff);
+  }
+  
+  .profile-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--card-background);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .profile-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .profile-container h2 {
+    text-align: center;
+    color: var(--text-color);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .profile-info, .profile-form {
+    margin-bottom: 2rem;
+  }
+  
+  .profile-info h4, .profile-form h4 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+  }
+  
+  .profile-info p {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .profile-info p strong {
+    color: var(--primary-color);
+  }
+  
+  .profile-form .form-label {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+  
+  .profile-form .form-control {
+    border: 2px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .profile-form .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    outline: none;
+  }
+  
+  .profile-form .btn-primary {
+    background: var(--gradient);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .profile-form .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  }
+  
+  .delete-section h4 {
+    color: var(--danger-color);
+  }
+  
+  .delete-section .btn-danger {
+    background-color: var(--danger-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .delete-section .btn-danger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+  }
+  
+  .text-danger {
+    color: var(--danger-color);
+    font-weight: 500;
+    text-align: center;
+    margin: 1rem 0;
+  }
+  
+  .text-success {
+    color: var(--success-color);
+    font-weight: 500;
+    text-align: center;
+    margin: 1rem 0;
+  }
+  
+  hr {
+    border: 0;
+    height: 1px;
+    background: var(--gradient);
+    margin: 1.5rem 0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 576px) {
+    .profile-container {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  
+    .profile-container h2 {
+      font-size: 1.5rem;
+    }
+  
+    .profile-info p {
+      font-size: 1rem;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .profile-form .form-control {
+      padding: 0.5rem;
+    }
+  
+    .profile-form .btn-primary, .delete-section .btn-danger {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
