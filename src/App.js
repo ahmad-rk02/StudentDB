@@ -133,7 +133,7 @@ function App() {
 
         {/* Footer */}
         <footer className="bg-dark text-center text-white py-3">
-          © {new Date().getFullYear()} Student Database System
+          AK © {new Date().getFullYear()} Student Database System
         </footer>
       </div>
     </Router>

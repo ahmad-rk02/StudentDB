@@ -1,12 +1,12 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Add useNavigate
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './AuthModal.css';
 
 const AuthModal = ({ onClose }) => {
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate(); 
-  const [view, setView] = useState('login'); 
+  const navigate = useNavigate();
+  const [view, setView] = useState('login');
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -90,15 +90,12 @@ const AuthModal = ({ onClose }) => {
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        console.error('API error:', { url, status: res.status, data });
-        throw new Error(data.error || 'Something went wrong');
-      }
+      if (!res.ok) throw new Error(data.error || 'Something went wrong');
 
       if (view === 'login') {
         login(data.user, data.token);
         onClose();
-        navigate('/'); // Redirect to home page
+        navigate('/');
       } else if (view === 'signup') {
         setView('otp');
         setSuccess('OTP sent to your email. Please enter the 6-digit code.');
@@ -120,7 +117,6 @@ const AuthModal = ({ onClose }) => {
         setSuccess('Password reset successful. You can now login.');
       }
     } catch (err) {
-      console.error('Frontend error:', err.message, err);
       setError(err.message);
     }
   };
@@ -133,36 +129,42 @@ const AuthModal = ({ onClose }) => {
 
   return (
     <div className="auth-modal-overlay">
-      <div className="auth-modal shadow-lg">
+      <div className="auth-modal">
         <button className="close-btn" onClick={onClose}>×</button>
-        <h3 className="text-center text-capitalize">{view === 'otp' ? 'Verify OTP' : view.replace('-', ' ')}</h3>
-        {error && <p className="text-danger text-center">{error}</p>}
-        {success && <p className="text-success text-center">{success}</p>}
+        <h3 className="modal-title">
+          {view === 'otp' ? 'Verify OTP' : view.replace('-', ' ')}
+        </h3>
+        
+        {error && <p className="text-danger">{error}</p>}
+        {success && <p className="text-success">{success}</p>}
+
         <form onSubmit={handleSubmit}>
           {view === 'signup' && (
             <input
               type="text"
               name="username"
-              className="form-control mb-3"
+              className="form-control"
               placeholder="Username"
               value={form.username}
               onChange={handleChange}
               required
             />
           )}
+
           {(view === 'login' || view === 'signup' || view === 'forgot' || view === 'reset') && (
             <input
               type="email"
               name="email"
-              className="form-control mb-3"
+              className="form-control"
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
               required
             />
           )}
+
           {(view === 'login' || view === 'signup') && (
-            <div className="input-group mb-3">
+            <div className="password-input">
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
@@ -172,31 +174,42 @@ const AuthModal = ({ onClose }) => {
                 onChange={handleChange}
                 required
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="btn-eye">
+              <button
+                type="button"
+                className="btn-eye"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
                 {showPassword ? '🙈' : '👁️'}
               </button>
             </div>
           )}
+
           {(view === 'otp' || view === 'reset') && (
-            <div className="otp-inputs mb-3 d-flex justify-content-center">
-              {form.otp.map((digit, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  name={`otp-${index}`}
-                  className="form-control otp-box mx-1 text-center"
-                  maxLength="1"
-                  value={digit}
-                  onChange={handleChange}
-                  onPaste={index === 0 ? handleOtpPaste : null}
-                  ref={(el) => (otpInputs.current[index] = el)}
-                  required
-                />
-              ))}
+            <div className="otp-input-container">
+              <div className="otp-inputs">
+                {form.otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    name={`otp-${index}`}
+                    className="otp-box"
+                    maxLength="1"
+                    value={digit}
+                    onChange={handleChange}
+                    onPaste={index === 0 ? handleOtpPaste : null}
+                    ref={(el) => (otpInputs.current[index] = el)}
+                    required
+                  />
+                ))}
+              </div>
             </div>
           )}
+
           {view === 'reset' && (
-            <div className="input-group mb-3">
+            <div className="password-input">
               <input
                 type={showNewPassword ? 'text' : 'password'}
                 name="newPassword"
@@ -206,12 +219,18 @@ const AuthModal = ({ onClose }) => {
                 onChange={handleChange}
                 required
               />
-              <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="btn-eye">
+              <button
+                type="button"
+                className="btn-eye"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+              >
                 {showNewPassword ? '🙈' : '👁️'}
               </button>
             </div>
           )}
-          <button type="submit" className="btn btn-primary w-100">
+
+          <button type="submit" className="btn btn-primary">
             {view === 'login' ? 'Login' :
              view === 'signup' ? 'Sign Up' :
              view === 'otp' ? 'Verify OTP' :
@@ -220,7 +239,7 @@ const AuthModal = ({ onClose }) => {
           </button>
         </form>
 
-        <div className="text-center mt-3">
+        <div className="auth-links">
           {view === 'login' && (
             <>
               <p>New user? <button className="btn-link" onClick={() => setView('signup')}>Sign Up</button></p>
