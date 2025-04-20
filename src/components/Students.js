@@ -140,7 +140,7 @@ const Students=()=> {
       <div className={`modal ${showModal ? 'd-block' : 'd-none'}`} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
-            <div className="modal-header bg-danger text-white">
+            <div className="modal-header bg-danger text-black">
               <h5 className="modal-title">Error</h5>
               <button type="button" className="btn-close" onClick={handleCloseModal}></button>
             </div>

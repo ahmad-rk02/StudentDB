@@ -37,7 +37,7 @@ function App() {
                   display: 'block',
                   width: '24px',
                   height: '2px',
-                  backgroundColor: 'black',
+                  backgroundColor: 'white',
                   margin: '5px 0',
                 }}
               />
@@ -46,7 +46,7 @@ function App() {
                   display: 'block',
                   width: '24px',
                   height: '2px',
-                  backgroundColor: 'black',
+                  backgroundColor: 'white',
                   margin: '5px 0',
                 }}
               />
@@ -55,7 +55,7 @@ function App() {
                   display: 'block',
                   width: '24px',
                   height: '2px',
-                  backgroundColor: 'black',
+                  backgroundColor: 'white',
                   margin: '5px 0',
                 }}
               />
