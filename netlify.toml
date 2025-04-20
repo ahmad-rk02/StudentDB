@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist"
+  publish = "build"  # CRA outputs to the 'build' folder
 
 [[redirects]]
   from = "/*"
@@ -8,4 +8,4 @@
   status = 200
 
 [build.environment]
-  GO_VERSION = ""
+  NODE_VERSION = "18"  # Optional: specify Node version if needed
