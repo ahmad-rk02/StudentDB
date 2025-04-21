@@ -63,9 +63,8 @@ function App() {
 
             {/* Navigation Links */}
             <nav
-              className={`d-md-flex flex-wrap gap-2 mt-3 mt-md-0 ${
-                isNavCollapsed ? 'd-none d-md-flex' : 'd-flex flex-column w-100'
-              }`}
+              className={`${isNavCollapsed ? 'd-none d-md-flex flex-row' : 'd-flex flex-column w-100'
+                } gap-2 mt-3 mt-md-0`}
             >
               <Link to="/" className="btn btn-outline-light w-100 w-md-auto">Home</Link>
               {user && (
@@ -79,6 +78,7 @@ function App() {
                 </>
               )}
             </nav>
+
           </div>
         </header>
 
